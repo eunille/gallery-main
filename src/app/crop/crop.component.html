@@ -1,0 +1,70 @@
+
+<div class="crop-dialog">
+    <h2>Crop Image</h2>
+  
+    <!-- Display the original image -->
+    <img id="imageElement" [src]="data.imageSrc" style="display: none;" (load)="onImageLoad()">
+  
+    <!-- Preview area for the cropped image -->
+    <div id="preview" class="preview"></div>
+  
+    <!-- Container for buttons for selecting crop shapes -->
+    <div class="shape-buttons">
+      <button
+        (click)="cropImage('square')"
+        [class.active]="selectedShape === 'square'"
+      >
+        Square
+      </button>
+      <button
+        (click)="cropImage('circle')"
+        [class.active]="selectedShape === 'circle'"
+      >
+        Circle
+      </button>
+      <!-- <button
+        (click)="cropImage('rectangle')"
+        [class.active]="selectedShape === 'rectangle'"
+      >
+        Rectangle
+      </button> -->
+      <button
+        (click)="cropImage('triangle')"
+        [class.active]="selectedShape === 'triangle'"
+      >
+        Triangle
+      </button>
+      <button
+        (click)="cropImage('polygon')"
+        [class.active]="selectedShape === 'polygon'"
+      >
+        Polygon
+      </button>
+      <button
+        (click)="cropImage('star')"
+        [class.active]="selectedShape === 'star'"
+      >
+        Star
+      </button>
+      <button
+        (click)="cropImage('heart')"
+        [class.active]="selectedShape === 'heart'"
+      >
+        Heart
+      </button>
+    </div>
+  
+    <!-- Buttons for cropping, resetting, and closing the dialog -->
+    <div class="action-buttons">
+        <button (click)="crop()">
+          <i class="fas fa-crop"></i> Crop
+        </button>
+        <button (click)="resetCrop()">
+          <i class="fas fa-undo"></i> Reset Crop
+        </button>
+        <button (click)="dialogRef.close()">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+  </div>
+  

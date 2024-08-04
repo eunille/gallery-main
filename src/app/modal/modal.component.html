@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>Upload Images</h2>
+<div mat-dialog-content class="upload-dialog-content">
+  <div class="upload-wrapper">
+    <div class="upload-section">
+  <ngx-file-drop (onFileDrop)="onFileDrop($event)" class="file-drop-container">
+    <ng-template ngx-file-drop-content-tmp let-openFileDialog="openFileDialog">
+      <p class="dropzone-text">
+        <a href="#" class="click-here-link" (click)="fileInput.click(); $event.preventDefault();">Click here</a> or drop files to upload
+      </p>
+      <input type="file" #fileInput multiple accept=".png, .jpg, .jpeg, .gif" (change)="onFileSelected($event)" hidden />
+    </ng-template>
+  </ngx-file-drop>
+  <input type="file" #fileInput multiple (change)="onFileSelected($event)" hidden >
+
+    <!-- File names list -->
+    <div class="file-names-list" *ngIf="files.length > 0">
+      <p class="files-list-title">Files to be uploaded:</p>
+      <ul class="file-names">
+        <li *ngFor="let file of files">{{ file.name }}</li>
+      </ul>
+    </div>
+    </div>
+    <div class="file-preview-section">
+  <div class="file-preview-container">
+    
+      <p *ngIf="files.length === 0" class="no-images-message">"Upload images to see previews"</p>
+    <div *ngFor="let file of files" class="file-preview">
+      <button class="close-button" (click)="removeFile(file)">
+        <i class="fas fa-times"></i>
+      </button>
+      <img [src]="file.preview" alt="Preview" class="file-image">
+      
+      <p class="file-name">{{ file.name }}</p>
+
+    </div>
+    <div mat-dialog-actions class="dialog-actions">
+      <button mat-button (click)="onDone()" class="action-button done-button">
+        <i class="fas fa-check"></i>
+      </button>
+      <button mat-button mat-dialog-close class="action-button cancel-button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- <div mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onDone()" class="action-button done-button">
+    <i class="fas fa-check"></i>
+  </button>
+  <button mat-button mat-dialog-close class="action-button cancel-button">
+    <i class="fas fa-times"></i>
+  </button>
+</div> -->
+</div>
+
+
+
+</div>

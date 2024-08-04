@@ -1,0 +1,195 @@
+/* Container styling for the dialog */
+.upload-dialog-content {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  max-height: 80vh; /* Limit height to 80% of viewport height */
+  overflow: hidden;
+}
+
+/* File drop area styling */
+.file-drop-container {
+
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 400px;
+  height: 200px; 
+  // background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Override ngx-file-drop default styles */
+::ng-deep ngx-file-drop {
+  display: block !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  
+}
+
+/* Customize the content within ngx-file-drop */
+::ng-deep ngx-file-drop .ngx-file-drop-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none; /* Ensure no additional borders are applied */
+  padding: 0; /* Ensure no additional padding is applied */
+  background-color: transparent; /* Ensure no background color is applied */
+  height: 100%; /* Make sure content fills the drop area */
+
+}
+
+/* Content styling inside ngx-file-drop */
+::ng-deep ngx-file-drop .ngx-file-drop-content p {
+  margin: 0;
+  font-size: 16px;
+  color: #007bff;
+}
+
+/* Button styling */
+.select-files-button {
+  margin-bottom: 16px;
+}
+.no-images-message{
+  text-align: center;
+  color: #d9d9d9;
+  margin-top: 40%;
+  // position: absolute;
+}
+
+/* File preview container styling */
+.file-preview-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 5 columns or more depending on available width */
+  gap: 16px; /* Space between items */
+  width: 100%;
+  max-height: calc(100vh - 200px); /* Ensure height does not exceed available space */
+  overflow-y: auto; /* Enable vertical scrolling if the content exceeds the available height */
+  overflow-x: hidden; /* Hide horizontal scrollbars */
+  padding: 8px; /* Optional padding to ensure content does not touch the edges */
+}
+
+/* File preview styling */
+.file-preview {
+  position: relative; /* Position close button absolutely within this container */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; /* Ensure file preview does not exceed container width */
+  height: 100%; /* Ensure the preview fits within the container */
+}
+
+.file-image {
+  width: 100%; /* Fit image to the preview container width */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensure the image covers the fixed area without distortion */
+  border: 1px solid #ddd; /* Border around the image */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.file-name {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Close button styling */
+.close-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+  border: none;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 10; /* Ensure button is above the image */
+}
+
+.close-button i {
+  color: #ff4d4d; /* Red color for the close icon */
+  font-size: 16px; /* Adjust size as needed */
+}
+
+/* Dialog actions styling */
+.dialog-actions {
+  position: absolute;
+  bottom:0;
+  right:0;
+}
+
+.click-here-link{
+  text-decoration: none;
+}
+p{
+  color: #000;
+}
+
+/* Add styling for the action buttons */
+.action-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 6px; /* Adjust padding as needed */
+  border: none; /* Remove default border */
+  background: none; /* Remove default background */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+/* Specific styles for the Done button */
+.done-button {
+  color: #007bff; /* Blue color for check icon and text */
+}
+
+.done-button i {
+  color: #007bff; /* Blue color for the check icon */
+  margin-right: 8px; /* Space between icon and text */
+}
+
+/* Specific styles for the Cancel button */
+.cancel-button {
+  color: #ff4d4d; /* Red color for x icon and text */
+}
+
+.cancel-button i {
+  color: #ff4d4d; /* Red color for the x icon */
+  margin-right: 8px; /* Space between icon and text */
+}
+
+/* Optional: Add hover effects */
+.action-button:hover {
+  background-color: #f1f1f1; /* Light background on hover */
+}
+/* Container for the upload and file preview sections */
+.upload-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  // height: 100vh;
+  // min-height: 100vh;
+}
+
+/* Style for the upload section */
+.upload-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  min-height: 100vh;
+  border-right: 1px #d9d9d9 solid;
+  overflow-y: auto
+}
+/* Style for file preview section */
+.file-preview-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+

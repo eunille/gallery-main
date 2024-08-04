@@ -1,0 +1,38 @@
+<!-- <h2 mat-dialog-title>Edit Comment</h2>
+<div mat-dialog-content>
+  <textarea matInput [(ngModel)]="editedText" rows="5" placeholder="Edit your comment" maxlength="150"></textarea>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button color="primary" (click)="save()">Save</button>
+</div> -->
+
+<!-- <h2 mat-dialog-title>Edit Comment</h2>
+<div mat-dialog-content>
+  <textarea matInput [(ngModel)]="editedText" rows="5" placeholder="Edit your comment" maxlength="150"></textarea>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">
+    <i class="fas fa-times"></i> Cancel
+  </button>
+  <button mat-button color="primary" (click)="save()">
+    <i class="fas fa-save"></i> Save
+  </button>
+</div> -->
+
+<div class="dialog-container">
+  <h2>Edit Comment</h2>
+  <div>
+    <textarea [(ngModel)]="editedText" rows="5" placeholder="Edit your comment" maxlength="150"></textarea>
+  </div>
+  <div class="button-container">
+    <button mat-button (click)="cancel()" class="btn-cancel">
+      <i class="fas fa-times"></i> 
+    </button>
+    <button mat-button color="primary" (click)="save()" class="btn-save">
+      <i class="fas fa-save"></i> 
+    </button>
+  </div>
+</div>
+
+

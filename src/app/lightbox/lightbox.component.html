@@ -1,0 +1,131 @@
+<div *ngIf="selectedImage" class="lightbox">
+  <button class="close-btn" (click)="closeLightbox()">
+    <i class="far fa-times"></i>
+  </button>
+  <div class="lightbox-content">
+    <div class="lightbox-img-container">
+      <div class="lightbox-img">
+        <img [src]="'http://localhost/galleryy/gallery-api/uploads/' + selectedImage.file_name" alt="{{ selectedImage.file_name }}" 
+        style="max-width: 400px; max-height: 400px;" 
+        [style.filter]="currentFilter" #imageElement>
+        <div class="button-container">
+          <button (click)="toggleEditOptions()" class="btn btn"><i class="fas fa-pencil-alt" style="color: orange;"></i></button>
+          <button class="btn btn" (click)="openCropDialog()" *ngIf="userId === selectedImage.user_id.toString()"><i class="fas fa-crop" style="color: blue;"></i></button>
+          <div class="filter-options" *ngIf="showEditOptions">
+            <label for="blackWhite">Black & White</label>
+            <input type="radio" id="blackWhite" name="filter" [(ngModel)]="selectedFilter" value="blackWhite" (change)="applyFilter()">
+            
+            <label for="film">Film</label>
+            <input type="radio" id="film" name="filter" [(ngModel)]="selectedFilter" value="film" (change)="applyFilter()">
+            
+            <label for="clear">Clear</label>
+            <input type="radio" id="clear" name="filter" [(ngModel)]="selectedFilter" value="clear" (change)="applyFilter()">
+            
+            <label for="warm">Warm</label>
+            <input type="radio" id="warm" name="filter" [(ngModel)]="selectedFilter" value="warm" (change)="applyFilter()">
+            
+            <label for="fresh">Fresh</label>
+            <input type="radio" id="fresh" name="filter" [(ngModel)]="selectedFilter" value="fresh" (change)="applyFilter()">
+            
+          </div>
+          <button (click)="resetFilters()" *ngIf="showEditOptions" class="btn btn"><i class="fas fa-sync-alt" style="color: yellow;"></i></button>
+          <button (click)="saveFiltered()" *ngIf="showEditOptions" class="btn btn"><i class="fas fa-download" style="color: blue;"></i></button>
+          <button (click)="updateImage()" *ngIf="showEditOptions && userId === selectedImage.user_id.toString()" class="btn btn"><i class="fas fa-check" style="color: green;"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="comment-section">
+      <h6>Comments</h6>
+      <div *ngFor="let comment of comments">
+        <ng-container *ngIf="comment.image_id === selectedImage.image_id">
+          <div class="comment-block">
+            <p><strong>{{ comment.username }}</strong>: {{ comment.comment_text }}
+              <button *ngIf="comment.user_id.toString() === userId" (click)="editComment(comment)" class="btn btn-comment-edit"><i class="fas fa-pencil" style="color: blue;"></i></button>
+              <button *ngIf="comment.user_id.toString() === userId" (click)="deleteComment(comment)" class="btn btn-comment-delete"><i class="fas fa-trash-alt" style="color: red;"></i></button>
+            </p>
+          </div>
+        </ng-container>
+      </div>
+       <div class="input-container">
+          <input type="text" id="text" [(ngModel)]="newComment" placeholder="Write a comment..." maxlength="150" [ngClass]="{'max-length-reached': isMaxLengthReached()}" name="newComment" required (keydown.enter)="addComment()">
+          <button (click)="addComment()" type="submit" class="btn-comment">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+    </div>
+  </div><div *ngIf="selectedImage" class="lightbox">
+    <button class="close-btn" (click)="closeLightbox()">
+      <i class="far fa-times"></i>
+    </button>
+    <div class="lightbox-content">
+      <div class="lightbox-img-container">
+        <div class="lightbox-img">
+          <img [src]="'http://localhost/galleryy/gallery-api/uploads/' + selectedImage.file_name" alt="{{ selectedImage.file_name }}" 
+          style="max-width: 400px; max-height: 400px;" 
+          [style.filter]="currentFilter" #imageElement>
+          <div class="button-container">
+            <button (click)="toggleEditOptions()" class="btn btn"><i class="fas fa-pencil-alt" style="color: orange;"></i></button>
+            <button class="btn btn" (click)="openCropDialog()" *ngIf="userId === selectedImage.user_id.toString()"><i class="fas fa-crop" style="color: blue;"></i></button>
+            <div class="filter-options" *ngIf="showEditOptions">
+              <label for="blackWhite">Black & White:</label>
+              <input type="radio" id="blackWhite" name="filter" [(ngModel)]="selectedFilter" value="blackWhite" (change)="applyFilter()">
+              <br>
+              <label for="film">Film:</label>
+              <input type="radio" id="film" name="filter" [(ngModel)]="selectedFilter" value="film" (change)="applyFilter()">
+              <br>
+              <label for="clear">Clear:</label>
+              <input type="radio" id="clear" name="filter" [(ngModel)]="selectedFilter" value="clear" (change)="applyFilter()">
+              <br>
+              <label for="warm">Warm:</label>
+              <input type="radio" id="warm" name="filter" [(ngModel)]="selectedFilter" value="warm" (change)="applyFilter()">
+              <br>
+              <label for="fresh">Fresh:</label>
+              <input type="radio" id="fresh" name="filter" [(ngModel)]="selectedFilter" value="fresh" (change)="applyFilter()">
+            </div>
+            <button (click)="resetFilters()" *ngIf="showEditOptions" class="btn btn"><i class="fas fa-sync-alt" style="color: yellow;"></i></button>
+            <button (click)="saveFiltered()" *ngIf="showEditOptions" class="btn btn"><i class="fas fa-download" style="color: blue;"></i></button>
+            <button (click)="updateImage()" *ngIf="showEditOptions && userId === selectedImage.user_id.toString()" class="btn btn"><i class="fas fa-check" style="color: green;"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="comment-section">
+        <h3>Comments</h3>
+        <div *ngFor="let comment of comments">
+          <ng-container *ngIf="comment.image_id === selectedImage.image_id">
+            <div class="comment-block">
+              <p>
+                <strong>{{ comment.username }}</strong>: {{ comment.comment_text }}
+              </p>
+              <div class="comment-actions">
+                <button *ngIf="comment.user_id.toString() === userId" (click)="editComment(comment)" class="btn btn-comment-edit"><i class="fas fa-pencil" style="color: blue;"></i></button>
+                <button *ngIf="comment.user_id.toString() === userId" (click)="deleteComment(comment)" class="btn btn-comment-delete"><i class="fas fa-trash-alt" style="color: red;"></i></button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <!-- <input [(ngModel)]="newComment" placeholder="Write a comment..." maxlength="150" [ngClass]="{'max-length-reached': isMaxLengthReached()}">
+        <button (click)="addComment()" class="btn-comment"><i class="fas fa-paper-plane"></i></button> -->
+        <div class="input-container">
+          <input id="text" [(ngModel)]="newComment" placeholder="Write a comment..." maxlength="150" [ngClass]="{'max-length-reached': isMaxLengthReached()}" name="newComment" required (keydown.enter)="addComment()" >
+          <button (click)="addComment()" type="submit" class="btn-comment"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<!-- <script>
+  const input = document.getElementById('text');
+
+  function Alert(){
+    alert(input.value);
+      }
+
+  input.addEventListener('keyup', (e) => {
+    if(e.keyCode === 13){
+      Alert();
+    }
+  }
+  );
+</script> -->

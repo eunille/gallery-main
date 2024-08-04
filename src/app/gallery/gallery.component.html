@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Gallery</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="gallery.component.scss">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <!-- Link to Google Fonts Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Top Navigation Bar -->
+  <div class="antialiased bg-gray-50 dark:bg-gray-900">
+    <nav
+      class="bg-white border-b-[2px] border-gray-200 px-8 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50 shadow-md">
+      <div class="flex flex-wrap justify-between items-center">
+        <div class="flex justify-start items-center">
+          <div class="flex flex-col justify-between">
+            <span class="flex items-center justify-between mr-4">
+              <img src="../../../assets/img/folio2.png" class=" rounded-r-md h-16 me-3" alt="Anuwrap Logo" />
+              <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white -ml-3">PhotoFolio</span>
+              <a class="ml-5">{{ formattedUsername }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex items-center justify-center md:order-2 space-x-2 md:space-x-0 rtl:space-x-reverse">
+          <button (click)="logout()" (click)="setActiveLink('uploads')"
+            class="block py-2 px-3 text-gray-900 rounded cursor-pointer hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Logout</button>
+          <!-- Dropdown menu -->
+        </div>
+        <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+          <ul
+            class="flex flex-col font-medium p-4 md:p-0 mt-4 border-none border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            <li>
+              <a [ngClass]="{'active': isGalleryActive}" (click)="setActiveLink('gallery')"
+                class="block py-2 px-3 text-gray-900 rounded cursor-pointer hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Home</a>
+            </li>
+            <li>
+              <a [ngClass]="{'active': !isGalleryActive}" (click)="setActiveLink('uploads')"
+                class="block py-2 px-3 text-gray-900 rounded cursor-pointer hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Collections</a>
+            </li>
+            <li>
+              <button (click)="triggerFileInput()" (click)="setActiveLink('uploads')"
+                class="block py-2 px-3 text-gray-900 rounded cursor-pointer hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Uploads</button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+
+  <!-- Gallery -->
+
+
+
+
+  <div class="min-h-screen bg-indigo-100 py-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+      <div class="grid gap-4" *ngFor="let image of images">
+        <div>
+          <a routerLink="view-image" >
+            <img
+              class="h-auto max-w-full rounded-lg transition ease-in-out delay-150 hover:-translate-y-3 hover:scale-130 duration-300 overflow-y-auto overflow-x-hidden"
+              [src]="'http://localhost/galleryy/gallery-api/uploads/' + image.file_name"
+              (click)="openLightbox(image)" alt="{{ image.file_name }}">
+          </a>
+          <button class="btn-delete" *ngIf="userId === image.user_id.toString()" (click)="deleteImage(image)">
+            <i class="fas fa-trash-alt" style="color: red;"></i>
+          </button>
+        </div>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+
+
+  <div class="gallery-lightbox-container">
+    <!-- Lightbox component -->
+    <app-lightbox *ngIf="isLightboxOpen" [selectedImage]="selectedImage" (close)="closeLightbox()"
+      (updateImageEvent)="handleUpdateImage()"></app-lightbox>
+  </div>
+
+  
+
+
+</body>
+
+</html>
