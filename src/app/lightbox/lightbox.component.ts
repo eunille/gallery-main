@@ -1,4 +1,13 @@
-import { Component, AfterViewInit, Input, Output, EventEmitter, ElementRef, ViewChild, HostListener } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import html2canvas from 'html2canvas';
 import { DataserviceService } from '../services/dataservice.service';
 import { EditcommentComponent } from '../editcomment/editcomment.component';
@@ -16,11 +25,11 @@ interface Comment {
   // Add any other properties if needed
 }
 
-
 @Component({
   selector: 'app-lightbox',
   templateUrl: './lightbox.component.html',
-  styleUrls: ['./lightbox.component.scss']
+  styleUrls: ['./lightbox.component.scss'],
+  
 })
 export class LightboxComponent {
   @Input() selectedImage: any;
@@ -42,17 +51,22 @@ export class LightboxComponent {
 
   showEditOptions = false; // Toggle to show/hide edit options
 
-  @ViewChild('imageElement') imageElement: ElementRef<HTMLImageElement> | undefined;
+  @ViewChild('imageElement') imageElement:
+    | ElementRef<HTMLImageElement>
+    | undefined;
 
   comments: Comment[] = [];
   newComment: string = ''; // Model for new comment input
   userId: string | null = localStorage.getItem('user_id');
 
-  constructor(private elementRef: ElementRef, private dataService: DataserviceService, public dialog: MatDialog) {
+  constructor(
+    private elementRef: ElementRef,
+    private dataService: DataserviceService,
+    public dialog: MatDialog
+  ) {
     this.userId = localStorage.getItem('user_id');
     this.fetchComments();
   }
-
 
   formatUploadedDate(uploadedAt: any): string {
     if (!uploadedAt) {
@@ -80,7 +94,9 @@ export class LightboxComponent {
         if (diffMinutes === 0) {
           return 'Posted just now';
         } else {
-          return `Posted ${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+          return `Posted ${diffMinutes} minute${
+            diffMinutes > 1 ? 's' : ''
+          } ago`;
         }
       } else if (diffHours === 1) {
         return 'Posted an hour ago';
@@ -95,7 +111,11 @@ export class LightboxComponent {
       return `Posted ${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
     } else {
       // More than 3 days ago
-      return uploadedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      return uploadedDate.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
     }
   }
 
@@ -132,11 +152,13 @@ export class LightboxComponent {
     this.loadImage();
   }
 
-
   loadImage() {
     if (this.imageElement && this.selectedImage) {
       console.log('Selected image:', this.selectedImage);
-      console.log('Image src:', `http://localhost/galleryy/gallery-api/uploads/${this.selectedImage.file_name}`);
+      console.log(
+        'Image src:',
+        `http://localhost/galleryy/gallery-api/uploads/${this.selectedImage.file_name}`
+      );
 
       this.imageElement.nativeElement.crossOrigin = 'anonymous';
       this.imageElement.nativeElement.src = `http://localhost/galleryy/gallery-api/uploads/${this.selectedImage.file_name}`;
@@ -146,7 +168,6 @@ export class LightboxComponent {
       console.log('Selected image:', this.selectedImage);
     }
   }
-
 
   updateImage() {
     const imageFileName = this.selectedImage?.file_name;
@@ -159,7 +180,13 @@ export class LightboxComponent {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.filter = this.currentFilter;
-        ctx.drawImage(this.imageElement.nativeElement, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+          this.imageElement.nativeElement,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
 
         try {
           const dataURL = canvas.toDataURL('image/jpeg');
@@ -167,7 +194,7 @@ export class LightboxComponent {
 
           const data = {
             fileName: imageFileName,
-            fileContent: base64Content
+            fileContent: base64Content,
           };
 
           this.dataService.sendApiRequest('updateImage', data).subscribe(
@@ -176,14 +203,14 @@ export class LightboxComponent {
                 Swal.fire({
                   icon: 'success',
                   title: 'Update Successful',
-                  text: response.message
+                  text: response.message,
                 });
                 this.updateImageEvent.emit();
               } else {
                 Swal.fire({
                   icon: 'error',
                   title: 'Update Failed',
-                  text: response.message
+                  text: response.message,
                 });
               }
             },
@@ -191,7 +218,7 @@ export class LightboxComponent {
               Swal.fire({
                 icon: 'error',
                 title: 'Update Failed',
-                text: 'Error updating image. Please try again.'
+                text: 'Error updating image. Please try again.',
               });
             }
           );
@@ -199,21 +226,22 @@ export class LightboxComponent {
           console.error('Error converting canvas to data URL', error);
         }
       } else {
-        console.error('Image element is undefined, its native element is not accessible, or image source is not loaded.');
+        console.error(
+          'Image element is undefined, its native element is not accessible, or image source is not loaded.'
+        );
       }
     }
   }
 
-
-
-
   openCropDialog(): void {
     const dialogRef = this.dialog.open(CropComponent, {
       width: '80%',
-      data: { imageSrc: `http://localhost/galleryy/gallery-api/uploads/${this.selectedImage.file_name}` }
+      data: {
+        imageSrc: `http://localhost/galleryy/gallery-api/uploads/${this.selectedImage.file_name}`,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result && result.croppedImage) {
         this.cropImage(result.croppedImage);
         this.updateImageEvent.emit();
@@ -221,7 +249,6 @@ export class LightboxComponent {
       }
     });
   }
-
 
   cropImage(croppedImage: string): void {
     const canvas = document.createElement('canvas');
@@ -238,7 +265,7 @@ export class LightboxComponent {
         const base64Content = dataURL.split(',')[1];
         const data = {
           fileName: this.selectedImage?.file_name,
-          fileContent: base64Content
+          fileContent: base64Content,
         };
 
         this.dataService.sendApiRequest('cropImage', data).subscribe(
@@ -247,14 +274,14 @@ export class LightboxComponent {
               Swal.fire({
                 icon: 'success',
                 title: 'Crop Successfully',
-                text: response.message
+                text: response.message,
               });
               this.updateImageEvent.emit();
             } else {
               Swal.fire({
                 icon: 'error',
                 title: 'Update Failed',
-                text: response.message
+                text: response.message,
               });
             }
           },
@@ -263,7 +290,7 @@ export class LightboxComponent {
             Swal.fire({
               icon: 'error',
               title: 'Update Failed',
-              text: 'Error updating image. Please try again.'
+              text: 'Error updating image. Please try again.',
             });
           }
         );
@@ -271,29 +298,32 @@ export class LightboxComponent {
     };
   }
 
-
-
-
   saveFiltered() {
     const imageFileName = this.selectedImage?.file_name;
     const canvas = document.createElement('canvas');
-  
+
     if (this.imageElement && this.imageElement.nativeElement.complete) {
       canvas.width = this.imageElement.nativeElement.width;
       canvas.height = this.imageElement.nativeElement.height;
-  
+
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.filter = this.currentFilter;
-        ctx.drawImage(this.imageElement.nativeElement, 0, 0, canvas.width, canvas.height);
-  
+        ctx.drawImage(
+          this.imageElement.nativeElement,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
         canvas.toBlob((blob) => {
           if (blob) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `filtered_${imageFileName}`;
             link.click();
-  
+
             Swal.fire({
               icon: 'success',
               title: 'Successfully Downloaded',
@@ -304,7 +334,6 @@ export class LightboxComponent {
       }
     }
   }
-  
 
   fetchComments(): void {
     this.dataService.recieveApiRequest('getComments').subscribe(
@@ -319,84 +348,92 @@ export class LightboxComponent {
     );
   }
 
-
-    addComment(): void {
-      if (this.newComment.trim().length === 0) {
-        console.error('Cannot add an empty comment.');
-        return;
-      }
-
-      if (this.newComment.length > 150) {
-        console.error('Comment exceeds maximum limit of 150 characters.');
-        return;
-      }
-
-      const userId = localStorage.getItem('user_id');
-      const userName = localStorage.getItem('username');
-      if (!userId) {
-        console.error('User ID not found in localStorage.');
-        return;
-      }
-
-      // Define image_id explicitly
-      const imageId = this.selectedImage?.image_id;
-
-      const commentData = {
-        user_id: userId,
-        username: userName,
-        image_id: imageId,
-        comment_text: this.newComment.trim()
-      };
-
-      console.log('Comment Data:', commentData); // Check the commentData object before sending
-
-      this.dataService.sendApiRequest('addComment', commentData).subscribe((response: { code: number, comment?: any, message?: string }) => {
-        if (response.code === 200) {
-          // Assuming response includes the new comment object
-          this.fetchComments();
-          if (response.comment) {
-            this.comments.push(response.comment); // Add the new comment to comments array
-          }
-          this.newComment = ''; // Clear input after successful addition
-        } else {
-          console.error('Error adding comment:', response.message);
-        }
-      });
+  addComment(): void {
+    if (this.newComment.trim().length === 0) {
+      console.error('Cannot add an empty comment.');
+      return;
     }
 
-    editComment(comment: Comment): void {
-      console.log('Editing comment:', comment); // Log the comment object to see its structure
+    if (this.newComment.length > 150) {
+      console.error('Comment exceeds maximum limit of 150 characters.');
+      return;
+    }
 
-      const dialogRef = this.dialog.open(EditcommentComponent, {
-        width: '500px',
-        data: { commentText: comment.comment_text }
-      });
+    const userId = localStorage.getItem('user_id');
+    const userName = localStorage.getItem('username');
+    if (!userId) {
+      console.error('User ID not found in localStorage.');
+      return;
+    }
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          console.log('Updated comment text:', result); // Log the updated comment text
+    // Define image_id explicitly
+    const imageId = this.selectedImage?.image_id;
 
-          // Update the comment locally and send API request to update on server
-          const updatedComment = { ...comment, comment_text: result };
+    const commentData = {
+      user_id: userId,
+      username: userName,
+      image_id: imageId,
+      comment_text: this.newComment.trim(),
+    };
 
-          console.log('Sending update request for comment:', updatedComment); // Log the updated comment object
+    console.log('Comment Data:', commentData); // Check the commentData object before sending
 
-          this.dataService.sendApiRequest('editComment', updatedComment).subscribe(
+    this.dataService
+      .sendApiRequest('addComment', commentData)
+      .subscribe(
+        (response: { code: number; comment?: any; message?: string }) => {
+          if (response.code === 200) {
+            // Assuming response includes the new comment object
+            this.fetchComments();
+            if (response.comment) {
+              this.comments.push(response.comment); // Add the new comment to comments array
+            }
+            this.newComment = ''; // Clear input after successful addition
+          } else {
+            console.error('Error adding comment:', response.message);
+          }
+        }
+      );
+  }
+
+  editComment(comment: Comment): void {
+    // if (!this.userId) return;
+    console.log('Editing comment:', comment); // Log the comment object to see its structure
+
+    const dialogRef = this.dialog.open(EditcommentComponent, {
+      width: '500px',
+      data: { commentText: comment.comment_text },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Updated comment text:', result); // Log the updated comment text
+
+        // Update the comment locally and send API request to update on server
+        const updatedComment = { ...comment, comment_text: result };
+
+        console.log('Sending update request for comment:', updatedComment); // Log the updated comment object
+
+        this.dataService
+          .sendApiRequest('editComment', updatedComment)
+          .subscribe(
             (response: any) => {
               console.log('Response from server:', response); // Log the response from the server
               if (response && response.code === 200) {
                 console.log('Comment updated successfully');
 
-                  // Show success message using SweetAlert2
-            Swal.fire({
-              icon: 'success',
-              title: 'Comment Updated',
-              text: 'Your comment has been updated successfully.',
-              confirmButtonText: 'OK'
-            });
+                // Show success message using SweetAlert2
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Comment Updated',
+                  text: 'Your comment has been updated successfully.',
+                  confirmButtonText: 'OK',
+                });
 
                 // Optionally, update the comment in your local array if needed
-                const index = this.comments.findIndex(c => c.comment_id === comment.comment_id);
+                const index = this.comments.findIndex(
+                  (c) => c.comment_id === comment.comment_id
+                );
                 if (index !== -1) {
                   this.comments[index].comment_text = result;
                 }
@@ -408,56 +445,51 @@ export class LightboxComponent {
               console.error('Error updating comment:', error); // Log any error that occurs during API request
             }
           );
-        }
-      });
-    }
-
-
-   deleteComment(comment: Comment): void {
-  const userId = localStorage.getItem('user_id');
-
-  // Confirm deletion with SweetAlert2
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You won\'t be able to revert this!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Ensure the current user is authorized to delete the comment
-      if (!userId || comment.user_id.toString() !== userId) {
-        console.error('User is not authorized to delete this comment.');
-        return;
       }
+    });
+  }
 
-      // Proceed with delete operation
-      this.dataService.sendApiRequest('deleteComment', { comment_id: comment.comment_id }).subscribe(
-        (response: any) => {
-          console.log('Comment deleted successfully', response);
-          this.fetchComments(); // Refresh comments after successful deletion
-          
-          Swal.fire(
-            'Deleted!',
-            'Your comment has been deleted.',
-            'success'
-          );
-        },
-        (error: any) => {
-          console.error('Error deleting comment', error);
+  deleteComment(comment: Comment): void {
+    const userId = localStorage.getItem('user_id');
+
+    // Confirm deletion with SweetAlert2
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Ensure the current user is authorized to delete the comment
+        if (!userId || comment.user_id.toString() !== userId) {
+          console.error('User is not authorized to delete this comment.');
+          return;
         }
-      );
-    }
-  });
-}
 
+        // Proceed with delete operation
+        this.dataService
+          .sendApiRequest('deleteComment', { comment_id: comment.comment_id })
+          .subscribe(
+            (response: any) => {
+              console.log('Comment deleted successfully', response);
+              this.fetchComments(); // Refresh comments after successful deletion
 
-
-
-
-
+              Swal.fire(
+                'Deleted!',
+                'Your comment has been deleted.',
+                'success'
+              );
+            },
+            (error: any) => {
+              console.error('Error deleting comment', error);
+            }
+          );
+      }
+    });
+  }
 
   toggleEditOptions(): void {
     this.showEditOptions = !this.showEditOptions;
@@ -496,9 +528,8 @@ export class LightboxComponent {
     event.stopPropagation(); // Prevent click propagation to parent elements
   }
 
-    // Function to check if input reaches maxlength
-    isMaxLengthReached(): boolean {
-      return this.newComment.length >= 150;
-    }
-
+  // Function to check if input reaches maxlength
+  isMaxLengthReached(): boolean {
+    return this.newComment.length >= 150;
+  }
 }

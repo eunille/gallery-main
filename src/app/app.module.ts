@@ -16,11 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { ModalComponent } from './modal/modal.component';
 import { CropComponent } from './crop/crop.component';
-import { MygalleryComponent } from './mygallery/mygallery.component';
-
-
-
-
 
 @NgModule({
   declarations: [
@@ -30,7 +25,6 @@ import { MygalleryComponent } from './mygallery/mygallery.component';
     NavbarComponent,
     ModalComponent,
     CropComponent,
-    MygalleryComponent
   ],
   imports: [
     BrowserModule,
@@ -44,12 +38,8 @@ import { MygalleryComponent } from './mygallery/mygallery.component';
     MatDialogModule,
     MatIconModule,
     NgxFileDropModule,
-   
   ],
-  providers: [
-    provideAnimationsAsync()
-  ],
-  bootstrap: [AppComponent]
-
+  providers: [provideAnimationsAsync()],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

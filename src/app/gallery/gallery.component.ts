@@ -1,4 +1,13 @@
-import { Component, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  EventEmitter,
+  Output,
+} from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
 import { DataserviceService } from '../services/dataservice.service';
 import swal from 'sweetalert2';
 import { ModalComponent } from '../modal/modal.component';
@@ -10,14 +19,14 @@ declare var $: any;
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
-  styleUrls: ['./gallery.component.css']
+  styleUrls: ['./gallery.component.css'],
 })
 export class GalleryComponent {
   // Properties
   selectedFile: File | null = null;
   selectedFiles: File[] = [];
   fileSizeError: string | null = null;
-  selectedFileName: string | null = null;  // Add this property
+  selectedFileName: string | null = null; // Add this property
   images: any[] = [];
   error: string | undefined;
   selectedImage: any;
@@ -30,7 +39,7 @@ export class GalleryComponent {
   isGalleryActive = true;
 
   setActiveLink(link: string): void {
-    this.isGalleryActive = (link === 'gallery');
+    this.isGalleryActive = link === 'gallery';
     if (this.isGalleryActive) {
       this.getAllUploads(); // Call your method to fetch all uploads if needed
     } else {
@@ -38,12 +47,16 @@ export class GalleryComponent {
     }
   }
 
-
   @ViewChild('exampleModal') modal?: ElementRef;
   @ViewChild('dropZone') dropZone?: ElementRef;
   @Output() delete = new EventEmitter<any>();
 
-  constructor(private dataService: DataserviceService, private http: HttpClient, private router: Router,public dialog: MatDialog) {
+  constructor(
+    private dataService: DataserviceService,
+    private http: HttpClient,
+    private router: Router,
+    public dialog: MatDialog
+  ) {
     this.userId = localStorage.getItem('user_id') || '';
   }
 
@@ -69,11 +82,17 @@ export class GalleryComponent {
 
   openModal(): void {
     $('#exampleModal').modal('show');
+
   }
 
   closeModal(): void {
     $('#exampleModal').modal('hide');
     this.resetModal();
+  }
+
+  // navigation to login
+  navigateToLogin(): void {
+    this.router.navigate(['login']);
   }
 
   // File Handling Methods
@@ -84,30 +103,27 @@ export class GalleryComponent {
         this.fileSizeError = 'File size exceeds 20 MB';
         this.selectedFileName = null;
         this.selectedFiles = []; // Reset selected files
-        
       } else {
         this.selectedFileName = file.name;
         this.fileSizeError = null;
         this.selectedFiles = [file]; // Set selected files
-        
       }
     }
   }
 
   triggerFileInput(): void {
     const dialogRef = this.dialog.open(ModalComponent, {
-      width: '90vw'
+      width: '90vw',
       // height: '50vh'
     });
-  
-    dialogRef.afterClosed().subscribe(result => {
+
+    dialogRef.afterClosed().subscribe((result) => {
       if (result && result.length > 0) {
         this.selectedFiles = result.map((file: any) => file.file);
         this.uploadFile();
       }
     });
   }
-  
 
   handleFile(file: File): void {
     if (file) {
@@ -137,7 +153,7 @@ export class GalleryComponent {
       const formData = new FormData();
 
       // Read each file and prepare its data
-      this.selectedFiles.forEach(file => {
+      this.selectedFiles.forEach((file) => {
         const reader = new FileReader();
 
         reader.onloadend = () => {
@@ -147,7 +163,7 @@ export class GalleryComponent {
           filesData.push({
             fileContent: fileContent,
             fileName: file.name,
-            fileType: file.type
+            fileType: file.type,
           });
 
           if (filesData.length === this.selectedFiles.length) {
@@ -165,50 +181,51 @@ export class GalleryComponent {
             });
 
             // Send encoded FormData
-            this.dataService.sendApiRequest('uploadImage', {
-              filesData: filesData,
-              userId: localStorage.getItem('user_id'),
-              userName: localStorage.getItem('username')
-            }).subscribe(
-              (response: any) => {
-                console.log('Server Response:', response);
+            this.dataService
+              .sendApiRequest('uploadImage', {
+                filesData: filesData,
+                userId: localStorage.getItem('user_id'),
+                userName: localStorage.getItem('username'),
+              })
+              .subscribe(
+                (response: any) => {
+                  console.log('Server Response:', response);
 
-                if (response && response.code !== undefined) {
-                  if (response.code === 200) {
-                    swal.fire({
-                      icon: 'success',
-                      title: 'Upload Successful',
-                      text: response.message
-                    });
-                    this.fetchImages();
+                  if (response && response.code !== undefined) {
+                    if (response.code === 200) {
+                      swal.fire({
+                        icon: 'success',
+                        title: 'Upload Successful',
+                        text: response.message,
+                      });
+                      this.fetchImages();
+                    } else {
+                      swal.fire({
+                        icon: 'error',
+                        title: 'Upload Failed',
+                        text: response.message || 'An unknown error occurred.',
+                      });
+                    }
                   } else {
                     swal.fire({
                       icon: 'error',
                       title: 'Upload Failed',
-                      text: response.message || 'An unknown error occurred.'
+                      text: 'Unexpected response format from the server.',
                     });
                   }
-                } else {
+                },
+                (error: any) => {
+                  console.error('Error uploading images', error);
                   swal.fire({
                     icon: 'error',
                     title: 'Upload Failed',
-                    text: 'Unexpected response format from the server.'
+                    text: 'Error uploading images. Please try again.',
                   });
                 }
-              },
-              (error: any) => {
-                console.error('Error uploading images', error);
-                swal.fire({
-                  icon: 'error',
-                  title: 'Upload Failed',
-                  text: 'Error uploading images. Please try again.'
-                });
-              }
-            );
+              );
 
             // Clear selected files and hide upload icon after uploading
             this.selectedFiles = [];
-          
           }
         };
 
@@ -219,7 +236,7 @@ export class GalleryComponent {
       swal.fire({
         icon: 'error',
         title: 'No Files Selected',
-        text: 'Please select files to upload.'
+        text: 'Please select files to upload.',
       });
     }
   }
@@ -257,9 +274,12 @@ export class GalleryComponent {
     this.dataService.recieveApiRequest('getImages').subscribe(
       (response: any) => {
         this.images = response;
+        console.log(this.images);
         // Filter images based on selectedUserId
         if (this.selectedUserId) {
-          this.images = this.images.filter(image => image.user_id.toString() === this.selectedUserId);
+          this.images = this.images.filter(
+            (image) => image.user_id.toString() === this.selectedUserId
+          );
         }
       },
       (error) => {
@@ -268,7 +288,7 @@ export class GalleryComponent {
       }
     );
   }
-  
+
   getAllUploads(): void {
     this.selectedUserId = ''; // Clear user-specific filter to show all images
     this.fetchImages(); // Fetch images with the new filter
@@ -278,14 +298,11 @@ export class GalleryComponent {
     this.selectedUserId = userId || ''; // Ensure selectedUserId is a string
     this.fetchImages(); // Fetch images with the new filter
   }
-  
 
   showAllImages(): void {
     this.selectedUserId = this.userId || ''; // Ensure selectedUserId is a string
     this.fetchImages(); // Fetch images with the new filter
   }
-  
-  
 
   deleteImage(image: any): void {
     if (!image || !image.image_id) {
@@ -293,51 +310,56 @@ export class GalleryComponent {
       return;
     }
 
-    swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.dataService.sendApiRequest('deleteImage', { image_id: image.image_id }).subscribe(
-          (response: any) => {
-            if (response.code === 200) {
-              this.fetchImages();
-              swal.fire({
-                title: 'Deleted!',
-                text: 'Your image has been deleted.',
-                icon: 'success',
-                timer: 2000
-              });
-            } else {
-              swal.fire({
-                title: 'Error!',
-                text: 'There was an error deleting the image.',
-                icon: 'error'
-              });
-            }
-          },
-          (error: any) => {
-            console.error('Error deleting image', error);
-            swal.fire({
-              title: 'Error!',
-              text: 'There was an error deleting the image.',
-              icon: 'error'
-            });
-          }
-        );
-      }
-    });
+    swal
+      .fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.dataService
+            .sendApiRequest('deleteImage', { image_id: image.image_id })
+            .subscribe(
+              (response: any) => {
+                if (response.code === 200) {
+                  this.fetchImages();
+                  swal.fire({
+                    title: 'Deleted!',
+                    text: 'Your image has been deleted.',
+                    icon: 'success',
+                    timer: 2000,
+                  });
+                } else {
+                  swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error deleting the image.',
+                    icon: 'error',
+                  });
+                }
+              },
+              (error: any) => {
+                console.error('Error deleting image', error);
+                swal.fire({
+                  title: 'Error!',
+                  text: 'There was an error deleting the image.',
+                  icon: 'error',
+                });
+              }
+            );
+        }
+      });
   }
- 
+
   // Lightbox Methods
   openLightbox(image: any): void {
     this.selectedImage = image;
     this.isLightboxOpen = true;
+    console.log("click")
   }
 
   closeLightbox(): void {
@@ -358,34 +380,35 @@ export class GalleryComponent {
   }
 
   logout() {
-    swal.fire({
-      title: 'Are you sure?',
-      text: 'You will be logged out of your account.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, log out',
-      cancelButtonText: 'Cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.dataService.logout(); // Call logout function in dataservice
-  
-        // Navigate to login page before showing the success message
-        this.router.navigate(['/login']).then(() => {
-          // Show a success message after navigation
-          swal.fire({
-            icon: 'success',
-            title: 'Logged out',
-            text: 'You have been successfully logged out.',
-            confirmButtonText: 'OK'
+    swal
+      .fire({
+        title: 'Are you sure?',
+        text: 'You will be logged out of your account.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, log out',
+        cancelButtonText: 'Cancel',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.dataService.logout(); // Call logout function in dataservice
+
+          // Navigate to login page before showing the success message
+          this.router.navigate(['/']).then(() => {
+            // Show a success message after navigation
+            swal.fire({
+              icon: 'success',
+              title: 'Logged out',
+              text: 'You have been successfully logged out.',
+              confirmButtonText: 'OK',
+            });
           });
-        });
-      }
-    });
+        }
+      });
   }
   navigateToMyGallery() {
     this.router.navigate(['/mygallery']);
   }
-
 }

@@ -13,7 +13,7 @@
     "ajv": "^8.17.1",
     "bootstrap": "^5.3.3",
     "cropperjs": "^1.6.2",
-    "flowbite": "^2.4.1",
+    "flowbite": "^2.5.2",
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "ngx-file-drop": "^16.0.0",
