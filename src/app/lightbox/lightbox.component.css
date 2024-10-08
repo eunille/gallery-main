@@ -1,3 +1,179 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+  box-sizing: border-box;
+}
+
+.lightbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  overflow: auto;
+  padding: 0;
+  z-index: 1000;
+}
+
+.lightbox .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 0;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.lightbox .close-btn .fa-times {
+  font-size: 25px;
+}
+
+.lightbox .lightbox-content {
+  display: flex;
+  align-items: flex-start;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  width: 60%;
+  height: 80%;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.lightbox .lightbox-content .lightbox-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  height: 100%;
+  position: relative;
+}
+
+.lightbox .lightbox-content .lightbox-img-container .lightbox-img {
+  background-color: #fff;
+  overflow: hidden;
+  text-align: center;
+  height: 100%;
+}
+
+.lightbox .lightbox-content .lightbox-img-container .lightbox-img img {
+  object-fit: cover;
+  height: 100%;
+}
+
+.lightbox .button-container {
+  margin-top: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: white;
+}
+
+.lightbox .button-container .btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: orange;
+}
+
+.lightbox .button-container .btn:hover {
+  color: darkorange;
+}
+
+.lightbox .button-container .filter-options {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.radio-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lightbox .button-container .filter-options label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.lightbox .button-container .filter-options input[type="radio"] {
+  margin: 5px 0;
+  cursor: pointer;
+  width: auto;
+  accent-color: #007bff;
+}
+
+.lightbox .button-container .comment-section {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-grow: 1;
+  height: 400px;
+  width: 400px;
+}
+
+.lightbox .button-container .comment-section h3 {
+  margin-top: 0;
+}
+
+.lightbox .button-container .comment-section .comment-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  margin-block: 10px;
+}
+
+.lightbox .button-container .comment-section .comment-item p {
+  padding: 0;
+  margin: 0 !important;
+}
+
+.lightbox .button-container .comment-section .comment-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.lightbox
+  .button-container
+  .comment-section
+  .comment-actions
+  .btn-comment-delete {
+  color: red;
+}
+
+.lightbox .button-container .comment-section .input-container {
+  position: relative;
+  width: 100%;
+}
+
+.lightbox .button-container .comment-section input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1;
+}
+
+.comment-section {
+  padding: 30px;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.comment-text {
+  flex-direction: column;
+}
+
+.comment-item {
+  justify-content: space-between;
+  display: flex;
+}

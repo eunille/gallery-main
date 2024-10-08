@@ -3,58 +3,75 @@
     <i class="far fa-times"></i>
   </button>
 
-  
 
-      <div class="lightbox-content">
-        <div class="lightbox-img-container">
-          <div class="lightbox-img">
-            <img [src]="'http://localhost/galleryy/gallery-api/uploads/' + selectedImage.file_name"
-                 alt="{{ selectedImage.file_name }}" class="max-w-[400px] max-h-[400px]" [style.filter]="currentFilter" #imageElement>
-            <div class="button-container">
-              <button *ngIf="userId" (click)="toggleEditOptions()" class="btn">
-                <i class="fas fa-pencil-alt"></i>
-              </button>
-              
-              <div class="filter-options" *ngIf="showEditOptions">
-                <label for="blackWhite">Black & White</label>
-                <input type="radio" id="blackWhite" name="filter" [(ngModel)]="selectedFilter" value="blackWhite" (change)="applyFilter()">
-                
-                <label for="clear">Clear</label>
-                <input type="radio" id="clear" name="filter" [(ngModel)]="selectedFilter" value="clear" (change)="applyFilter()">
-                
-                <label for="warm">Warm</label>
-                <input type="radio" id="warm" name="filter" [(ngModel)]="selectedFilter" value="warm" (change)="applyFilter()">
+
+  <div class="lightbox-content">
+    <div class="lightbox-img-container">
+      <div class="lightbox-img">
+        <img [src]="'http://localhost/galleryy/gallery-api/uploads/' + selectedImage.file_name"
+          alt="{{ selectedImage.file_name }}" class="max-w-[400px] max-h-[400px]" [style.filter]="currentFilter"
+          #imageElement>
+
+      </div>
+    </div>
+    <!-- Comment Section -->
+    <div class="button-container">
+      <button *ngIf="userId" (click)="toggleEditOptions()" class="btn">
+        <i class="fas fa-pencil-alt"></i> Edit
+      </button>
+
+      <div class="filter-options" *ngIf="showEditOptions">
+        <div class="radio-container">
+          <input type="radio" id="blackWhite" name="filter" [(ngModel)]="selectedFilter" value="blackWhite"
+            (change)="applyFilter()">
+          <label for="blackWhite"> Black & White</label>
+        </div>
+        <div class="radio-container">
+          <input type="radio" id="clear" name="filter" [(ngModel)]="selectedFilter" value="clear"
+            (change)="applyFilter()">
+          <label for="clear"> Clear</label>
+
+        </div>
+        <div class="radio-container">
+          <input type="radio" id="wardrm" (change)="applyFilter()">
+          <label for="warm"> Warm</label>
+        </div>
+        <button (click)="updateImage()" *ngIf="showEditOptions && userId === selectedImage.user_id.toString()"
+          class="btn">
+          <i class="fas fa-check" style="color: green;"></i>
+        </button>
+      </div>
+    </div>
+    <div class="comment-section" *ngIf="userId">
+      <h3>Comment</h3>
+      <div class="input-container">
+        <input id="text" [(ngModel)]="newComment" placeholder="Write a comment..." maxlength="150" name="newComment"
+          required (keydown.enter)="addComment()">
+        <button (click)="addComment()" type="submit" class="btn-comment">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <div class="comment-container" *ngFor="let comment of comments">
+        <ng-container *ngIf="comment.image_id === selectedImage.image_id">
+          <div class="comment-block">
+
+            <div class="comment-item">
+              <div class="comment-text">
+                <strong>{{ comment.username }}</strong>: <br>
+                {{ comment.comment_text }}
               </div>
-      
-              <button (click)="updateImage()" *ngIf="showEditOptions && userId === selectedImage.user_id.toString()" class="btn">
-                <i class="fas fa-check" style="color: green;"></i>
-              </button>
+              <div class="comment-actions">
+                <button *ngIf="comment.user_id.toString() === userId" (click)="deleteComment(comment)"
+                  class="btn btn-comment-delete">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Comment Section -->
-        <div class="comment-section" *ngIf="userId">
-          <h3>Comment</h3>
-          <div *ngFor="let comment of comments">
-            <ng-container *ngIf="comment.image_id === selectedImage.image_id">
-              <div class="comment-block">
-                <p>
-                  <strong>{{ comment.username }}</strong>: {{ comment.comment_text }}
-                </p>
-                <div class="comment-actions">
-                  <button *ngIf="comment.user_id.toString() === userId" (click)="deleteComment(comment)" class="btn btn-comment-delete">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-          <div class="input-container">
-            <input id="text" [(ngModel)]="newComment" placeholder="Write a comment..." maxlength="150" name="newComment" required (keydown.enter)="addComment()">
-            <button (click)="addComment()" type="submit" class="btn-comment">
-              <i class="fas fa-paper-plane"></i>
-            </button>
-          </div>
-        </div>
+        </ng-container>
       </div>
-      
+
+
+    </div>
+  </div>
